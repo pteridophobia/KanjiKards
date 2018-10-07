@@ -1,3 +1,16 @@
+#TODO: add all 2136 kanji to KanjiKard class
+#TODO: create a basic UI
+#TODO: allow user to make sets of cards 
+#TODO: make a practice mode that allows users to practice sets ok cards
+#TODO: make algorithms to help determine how often and which cards show up in practice
+#TODO: let user browse all kanji
+#TODO: allow user to save data locally
+#TODO: make load function to read saved local data
+#TODO: make a search function that allows user to search by multiple different elements
+#TODO: impliment an optional timer for practice mode
+#TODO: make links to jishoo.org for further imformation regarding specific kanji
+#TODO: other stuff
+
 import struct
 from struct import *
 

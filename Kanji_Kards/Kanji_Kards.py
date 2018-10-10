@@ -10,7 +10,10 @@
 #TODO: impliment an optional timer for practice mode
 #TODO: make links to jishoo.org for further imformation regarding specific kanji
 #TODO: other stuff
-
+#TODO: use html scrubbing to load all kanji
+#TODO: implement function to take all loaded kanji[] and put them into the KanjiKard class
+#TODO: implement functions to traverse and search the doubly linked list of the KanjiKard class
+ 
 import struct
 from struct import *
 
@@ -26,7 +29,6 @@ class KanjiKard:
     num_attempts = 0# The number of attempts the user has used for the character
     num_right = 0   # The number of correct attempts
     num_wrong = 0   # The number of incorrect attempts
-      
     def __init__(self):
         self.next = None# pointer to next
         self.prev = None# pointer to previous
@@ -74,6 +76,41 @@ one.english3 = ""
 one.grade_level = 1
 one.next = two
 
+
+
+temp = KanjiKard()
+temp = one
+count = 0
+after = KanjiKard()
+while count < 3:
+    
+    if count == 0:
+        after.kanji = "十"
+        after.reading = "じゅう"
+        after.romanji = "juu"
+        after.english = "ten"
+        after.grade_level = 1
+    elif count == 1:
+        after.kanji = "七"
+        after.reading = "asf"
+        after.romanji = "nana"
+        after.english = "seven"
+        after.grade_level = 1
+    elif count == 2:
+        after.kanji = "五"
+    #print(after.kanji)
+    after.prev = temp
+    temp.next = after
+    temp = after
+    after.next = KanjiKard()
+    after = after.next
+    count += 1
+print (one.kanji)
+print (one.next.kanji)
+
+print (one.next.next.kanji)
+print (one.next.next.next.kanji)
+"""
 two.kanji = "二"
 two.reading = "に"
 two.romanji = "ni"
@@ -131,7 +168,7 @@ seven.english = "seven"
 seven.english2 = ""
 seven.english3 = ""
 seven.grade_level = 1
-seven.next = eight
+seven.next = eight#
 seven.prev = six
 
 eight.kanji = "八"
@@ -164,19 +201,20 @@ ten.english3 = ""
 ten.grade_level = 1
 ten.next = under
 ten.prev = nine 
+"""
+#page = requests.get("https://jishi..;.." + kanji)
+#
 
 
-   
-
-temp = KanjiKard()
-temp = one
-temp_kanji = temp.kanji
-while temp_kanji != None: #prints out each kanji, reading,  and english meaning
-    if temp.next == None:
-        break
-    print(temp.kanji,":", temp.reading, ":", temp.english )
-    temp = temp.next
-    temp_kanji = temp.kanji
+#temp = KanjiKard()
+#temp = one
+#temp_kanji = temp.kanji
+#while temp_kanji != None: #prints out each kanji, reading,  and english meaning
+#    if temp.next == None:
+#        break
+#    print(temp.kanji,":", temp.reading, ":", temp.english )
+#    temp = temp.next
+#    temp_kanji = temp.kanji
 
 
 

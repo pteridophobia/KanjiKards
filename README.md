@@ -18,10 +18,22 @@ Some features that will be implemented to help achive this goal are:
   4) Algorithms that track the users number of right and wrong answers for each kanji and adjust the frequency that each
   kanji appears in the practice modes
   5) A feature that lets the user reset all data that tracks their right and wrong answers
-  6) A feature that inks to the website jisho.org(This is the same site that will be used for html scrubbing) for the kanji 
+  6) A feature that inks to the website jisho.org(This is the same site that will be used for html scrapping) for the kanji 
   that the user wants to know more information about. 
   7) A cumulative daily practice mode that gradually adds more kanji each day. The user will use this mode once a day
   with a percentage of the kanji that have already been added to the mode. If the user misses a day then the old kanji that
   they were supposed to review will be added to the ext day's review. The new kanji that would have been added, however, will 
-  not be added in order to not overwhelm the user with too many new kanji in one day.
-  
+  not be added in order to not overwhelm the user with too many new kanji in one day. 
+
+The 2136 kanji will be added into a doubly linked list of type class KanjiKard. The kanji will be scrapped from 
+the website jisho.org which is an online Japanese dictionary. Beautiful Soup is a tool that will be used to help
+with the scrapping. Once all the kanji has been scrapped and loaded into the linked list a function will write all
+the contents of the list to a .json or .txt file. Then when the program is started it will read from the .txt/.json 
+file and load the linked list. This is to prevent the program form requireing a internet conection and will also have
+a quicker run time than if web scrapping was done every time the program starts up. User data will be saved in the same 
+file to make loading simplier. If the user want a reset on their stats then a backup file containing the list of kanji 
+and default values for user data will be loaded and be used to overwrite the save file. The user created and premade sets
+of kanji will be saved in a third .txt/.json file. Since the list won't have a variabe name for each kanji in the list
+the file that includes the sets will only contain the kanji characters that the set contains. When reading in a set 
+the kanji character from the set file will be read and then the list will be searched for the memner that contains that
+character. 

@@ -1,6 +1,148 @@
 from bs4 import BeautifulSoup
 import requests
 
+ 
+
+def hiragana_to_romanji(hira):
+    romanji = str()
+    str1 = ['']*(len(hira))
+    i = 0
+    next_rep = -1
+    def hiragana_dict(hira):
+        return {
+            'あ': 'a',
+            'い': 'i',
+            'う': 'u',
+            'え': 'e',
+            'お': 'o',
+            'か': 'ka',
+            'き': 'ki',
+            'く': 'ku',
+            'け': 'ke',
+            'こ': 'ko',
+            'さ': 'sa',
+            'し': 'shi',
+            'す': 'su',
+            'せ': 'se',
+            'そ': 'so',
+            'た': 'ta',
+            'ち': 'chi',
+            'つ': 'tsu',
+            'て': 'te',
+            'と': 'to',
+            'な': 'na',
+            'に': 'ni',
+            'ぬ': 'nu',
+            'ね': 'ne',
+            'の': 'no',
+            'は': 'ha',
+            'ひ': 'hi',
+            'ふ': 'fu',
+            'へ': 'he',
+            'ほ': 'ho',
+            'ま': 'ma',
+            'み': 'mi',
+            'む': 'mu',
+            'め': 'me',
+            'も': 'mo',
+            'や': 'ya',
+            'ゆ': 'yu',
+            'よ': 'yo',
+            'ら': 'ra', 
+            'り': 'ri',
+            'る': 'ru',
+            'れ': 're',
+            'ろ': 'ro',
+            'わ': 'wa',
+            'ゐ': 'wi',
+            'ゑ': 'we',
+            'を': 'wo',
+            'ん': 'n',
+            'が': 'ga',
+            'ぎ': 'gi',
+            'ぐ': 'gu',
+            'げ': 'ge',
+            'ご': 'go',
+            'ざ': 'za',
+            'じ': 'ji',
+            'ず': 'zu',
+            'ぜ': 'ze',
+            'ぞ': 'zo',
+            'だ': 'da',
+            'ぢ': 'dji',
+            'づ': 'dzu',
+            'で': 'de',
+            'ど': 'do',
+            'ば': 'ba',
+            'び': 'bi',
+            'ぶ': 'bu',
+            'べ': 'be',
+            'ぼ': 'bo',
+            'ぱ': 'pa',
+            'ぴ': 'pi',
+            'ぷ': 'ぷ',
+            'ぺ': 'pe',
+            'ぽ': 'po',
+            'きゃ': 'kya',
+            'きゅ': 'kyu',
+            'きょ': 'kyo',
+            'しゃ': 'sha',
+            'しゅ': 'shu',
+            'しょ': 'sho',
+            'ちゃ': 'cha',
+            'ちゅ': 'chu',
+            'ちょ': 'cho',
+            'にゃ': 'nya',
+            'にゅ': 'nyu',
+            'にょ': 'nyo',
+            'ひゃ': 'hya',
+            'ひゅ': 'hyu',
+            'ひょ': 'hyo',
+            'みゃ': 'mya',
+            'みゅ': 'myu',
+            'みょ': 'myo',
+            'りゃ': 'rya',
+            'りゅ': 'ryu',
+            'りょ': 'ryo',
+            'ぎゃ': 'gya',
+            'ぎゅ': 'gyu',
+            'ぎょ': 'gyo',
+            'じゃ': 'ja',
+            'じゅ': 'ju',
+            'じょ': 'jo',
+            'ぢゃ': 'ja',
+            'ぢゅ': 'ju',
+            'ぢょ': 'jo',
+            'びゃ': 'bya',
+            'びゅ': 'byu',
+            'びょ': 'byo',
+            'ぴゃ': 'pya',
+            'ぴゅ': 'pyu',
+            'ぴょ': 'pyo',
+            'ょ': '',
+            'ゅ': '', 
+            'ゃ': '',
+            'っ': '',
+            '\n': ''
+        }[hira]
+    for c in hira:
+        str1[i] = c
+        if c == 'ょ' or c == 'ゅ' or c == 'ゃ':
+            str1[i-1] = str1[i-1] + str1[i]
+        i += 1
+    i = 0
+    for h in str1:
+        if h == 'っ':
+            next_rep = 1
+        romanji = romanji + hiragana_dict(str1[i])
+        if next_rep == 1:
+            next_rep = 0
+            temp = hiragana_dict(str1[i+1])[0:1]
+            romanji = romanji + hiragana_dict(str1[i+1])[0:1] + hiragana_dict(str1[i])
+        i+=1
+    return romanji
+
+
 kanjilist = requests.get('http://nihongo.monash.edu/jouyoukanji.html', auth=('user', 'pass'))
 print(kanjilist.status_code)
 soup = BeautifulSoup(kanjilist.text, features="html.parser")
@@ -36,6 +178,13 @@ reading = kanji_info.find("span", "furigana")
 reading = str(reading)
 reading = reading.translate(translation_table)
 print(reading)
+
+romanji = hiragana_to_romanji(reading)
+print(romanji)
+meaning = kanji_info.find("span", "meaning-meaning")
+meaning = str(meaning)
+print(meaning[30:len(meaning)-7])
+
 temp = "在"
 jishoreq = requests.get('https://jisho.org/search/' + temp, auth=('user', 'pass'))
 print("Jisho get status code:", jishoreq.status_code )
@@ -44,6 +193,13 @@ reading = kanji_info.find("span", "furigana")
 reading = str(reading)
 reading = reading.translate(translation_table)
 print(reading)
+
+romanji = hiragana_to_romanji(reading)
+print(romanji)
+meaning = kanji_info.find("span", "meaning-meaning")
+meaning = str(meaning)
+print(meaning[30:len(meaning)-7])
+
 temp = "長"
 jishoreq = requests.get('https://jisho.org/search/' + temp, auth=('user', 'pass'))
 print("Jisho get status code:", jishoreq.status_code )
@@ -52,6 +208,13 @@ reading = kanji_info.find("span", "furigana")
 reading = str(reading)
 reading = reading.translate(translation_table)
 print(reading)
+
+romanji = hiragana_to_romanji(reading)
+print(romanji)
+meaning = kanji_info.find("span", "meaning-meaning")
+meaning = str(meaning)
+print(meaning[30:len(meaning)-7])
+
 temp = "刈"
 jishoreq = requests.get('https://jisho.org/search/' + temp, auth=('user', 'pass'))
 print("Jisho get status code:", jishoreq.status_code )
@@ -60,6 +223,13 @@ reading = kanji_info.find("span", "furigana")
 reading = str(reading)
 reading = reading.translate(translation_table)
 print(reading)
+
+romanji = hiragana_to_romanji(reading)
+print(romanji)
+meaning = kanji_info.find("span", "meaning-meaning")
+meaning = str(meaning)
+print(meaning[30:len(meaning)-7])
+
 temp = "乏"
 jishoreq = requests.get('https://jisho.org/search/' + temp, auth=('user', 'pass'))
 print("Jisho get status code:", jishoreq.status_code )
@@ -69,7 +239,12 @@ reading = str(reading)
 reading = reading.translate(translation_table)
 print(reading)
 
-
+romanji = hiragana_to_romanji(reading)
+print(romanji)
+meaning = kanji_info.find("span", "meaning-meaning")
+meaning = str(meaning)
+print(meaning[30:len(meaning)-7])
+#print(kanji_info)
 
 
 

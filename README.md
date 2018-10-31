@@ -24,8 +24,6 @@ Some features that will be implemented to help achive this goal are:
   with a percentage of the kanji that have already been added to the mode. If the user misses a day then the old kanji that
   they were supposed to review will be added to the ext day's review. The new kanji that would have been added, however, will 
   not be added in order to not overwhelm the user with too many new kanji in one day. 
-  8) The ability for users to change the color and font/sont size of the program so that they can practice with different visual      associations
-
 
 The 2136 kanji will be added into a doubly linked list of type class KanjiKard. The kanji will be scrapped from 
 the website jisho.org which is an online Japanese dictionary. Beautiful Soup is a tool that will be used to help

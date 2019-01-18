@@ -137,8 +137,10 @@ def print_all_kanji(head): #prints only the kanji for each KanjiKard
         print(temp.kanji)
         temp = temp.next
         temp_kanji = temp.kanji
-
-def search_for_kanji(head, target): #searches list for target kanji and returns pointer to that KanjiKard
+"""
+def search_for_kanji(head): #searches list for target kanji and returns pointer to that KanjiKard
+    print("Enter the kanji you want to search for: ")
+    target = input()
     temp = KanjiKard()
     temp = head
     temp_kanji = temp.kanji
@@ -148,17 +150,69 @@ def search_for_kanji(head, target): #searches list for target kanji and returns 
             break
         if temp_kanji == target:
             print("Found", target)
+            print("\n")
+            print(temp.kanji,":", temp.reading, ":", temp.english )
             return temp
         temp = temp.next
         temp_kanji = temp.kanji
-testS = KanjiKard()
-testS = search_for_kanji(head, target = "七")
-if testS != None:
-    print(testS.kanji, ":Search test")
+"""
 
 
-print("now we print all kanji\n")
-print_all_kanji(head)
+def findWholeWord(w):
+    return re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search
+
+
+def search(head): #searches list for target kanji and returns pointer to that KanjiKard
+    print("Enter the romanji spelling, English word, hiraganna/katakanna, or kanji character for the kanji you want to search for: ")
+    target = input()
+    temp = KanjiKard()
+    temp = head
+    temp_kanji = temp.kanji
+    num_found = 0
+    while temp_kanji != None:
+        if temp.next == None:
+            if num_found == 0:
+                print(target, "could not be found")
+            else:
+                print(target, "found", num_found, "times")
+            break
+        if temp.romanji == target or temp.english == target or temp.kanji == target or temp.reading == target or findWholeWord(target)(temp.english):
+            print("Found", target)
+            print(temp.kanji,":", temp.reading, ":", temp.romanji, ":", temp.english )
+            print('\n')
+            num_found += 1
+            #return temp
+
+        temp = temp.next
+        temp_kanji = temp.kanji
+
+#testS = KanjiKard()
+#testS = search_for_kanji(head, target = "七")
+#if testS != None:
+#    print(testS.kanji, ":Search test")
+running = 1
+def end(Q):
+    global running
+    running = 0
+actions = {
+    '1': print_all_kanji,
+    '2': print_all,
+    '3': search,
+    'q': end
+}
+while(running):
+    print("Welcome\n")
+    print("Available actions:\n")
+    print("1.) display all kanji\n")
+    print("2.) display all kanji : readings : meaning\n")
+    print("3.) search for kanji\n")
+    print("q.) quit\n")
+    print("Enter the number of the action you wish to execute: ")
+
+    action = input()
+    
+    actions[action](head)
+#print_all_kanji(head)
 
 
 

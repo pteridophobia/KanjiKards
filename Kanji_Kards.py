@@ -37,6 +37,7 @@ class KanjiKard:
     daily_correct = 0
     daily_wrong = 0
     daily_easy = 0
+
     def __init__(self):
         self.next = None# pointer to next
         self.prev = None# pointer to previous
@@ -48,10 +49,16 @@ class User:
         self.to_study = []
     def add_learned(self, kard):
         self.current_learned.append(kard)
+    def remove_learned(self, kard):
+        self.current_learned.remove(kard)
     def add_not_learned(self, kard):
         self.not_learned.append(kard)
-    def add_to_study(self, kard): #///////TODO
+    def remove_not_learned(self, kard):
+        self.not_learned.remove(kard)
+    def add_to_study(self, kard): 
         self.to_study.append(kard)
+    def remove_to_study(self, kard):
+        self.to_study.remove(kard)
 
 """
  = KanjiKard()
@@ -232,13 +239,78 @@ def load_user(head):
     temp = head
     new_user = user()
     while temp.kanji != None:
-        if temp.next == None:
-            return new_user
+        # Here we check where the kard belongs
+        # that is to_study, learned, not_learned
         elif temp.learned == False:
             new_user.add_not_learned(temp)
         elif temp.learned = True:
+            new_user.add_learned(temp)        
+        if temp.num_right > 2*temp.num_wrong:
             new_user.add_learned(temp)
+            temp.learned = True
+        elif temp.num_wrong > 0:
+            new_user.add_to_study(temp)
+        if temp.next == None:
+            return new_user
+        temp = temp.next
                     
+def update_user(head, cur_user):
+    temp = KanjiKard()
+    temp = head
+        while temp.kanji != None:
+            if temp.num_right > 2*temp.num_wrong:
+                cur_user.add_learned(temp)
+                temp.learned = True
+                if temp in cur_user.not_learned:
+                    cur_user.remove_not_learned(tmep)
+            elif temp.num_wrong > 0:
+                cur_user.add_to_study(temp)
+            else:
+                cur_user.add_not_learned(temp)
+                temp.learned = False
+                if temp in cur_user.current_learned:
+                    cur_user.remove_learned(temp)
+            if temp.daily_easy > 2:
+                temp.add_learned(temp)
+                temp.learned = True
+                if temp in cur_user.not_learned:
+                    cur_user.remove_not_learned(tmep)
+            if temp.daily_wrong > 1:
+                temp.add_to_study(temp)
+            if temp.daily_correct > 2*tmep.daily_wrong:
+                if temp.daily_correct - tmep.daily_wrong > 10:
+                    cur_user.add_learned(temp)
+                    if temp in cur_user.not_learned:
+                        cur_user.remove_not_learned(tmep)
+            if temp.next == None:
+                return cur_user
+            temp = tmep.next
+
+def update_on_kard(temp, cur_user):
+    if temp.num_right > 2*temp.num_wrong:
+        cur_user.add_learned(temp)
+        temp.learned = True
+        if temp in cur_user.not_learned:
+            cur_user.remove_not_learned(tmep)
+    elif temp.num_wrong > 0:
+        cur_user.add_to_study(temp)
+    else:
+        cur_user.add_not_learned(temp)
+        temp.learned = False
+        if temp in cur_user.current_learned:
+            cur_user.remove_learned(temp)
+    if temp.daily_easy > 2:
+        temp.add_learned(temp)
+        temp.learned = True
+        if temp in cur_user.not_learned:
+            cur_user.remove_not_learned(tmep)
+    if temp.daily_wrong > 1:
+        temp.add_to_study(temp)
+    if temp.daily_correct > 2*tmep.daily_wrong:
+        if temp.daily_correct - tmep.daily_wrong > 10:
+            cur_user.add_learned(temp)
+            if temp in cur_user.not_learned:
+                cur_user.remove_not_learned(tmep)
 
 def print_all(head): #prints all members of each KanjiKard
     temp = KanjiKard()

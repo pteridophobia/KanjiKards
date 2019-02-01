@@ -1,20 +1,21 @@
-#TODO: add all 2136 kanji to KanjiKard class
+#DONE: add all 2136 kanji to KanjiKard class
 #TODO: create a basic UI
 #TODO: allow user to make sets of cards 
 #TODO: make a practice mode that allows users to practice sets ok cards
 #TODO: make algorithms to help determine how often and which cards show up in practice
-#TODO: let user browse all kanji
-#TODO: allow user to save data locally
-#TODO: make load function to read saved local data
-#TODO: make a search function that allows user to search by multiple different elements
+#DONE: let user browse all kanji
+#DONE: allow user to save data locally
+#DONE: make load function to read saved local data
+#DONE: make a search function that allows user to search by multiple different elements
 #TODO: impliment an optional timer for practice mode
 #TODO: make links to jishoo.org for further imformation regarding specific kanji
 #TODO: other stuff
-#TODO: use html scrubbing to load all kanji
-#TODO: implement function to take all loaded kanji[] and put them into the KanjiKard class
-#TODO: implement functions to traverse and search the doubly linked list of the KanjiKard class
+#DONE: use html scrubbing to load all kanji
+#DONE: implement function to take all loaded kanji[] and put them into the KanjiKard class
+#DONE: implement functions to traverse and search the doubly linked list of the KanjiKard class
 import re
 import struct
+import os
 from struct import *
 from bs4 import BeautifulSoup
 
@@ -143,6 +144,7 @@ def no_save_file(head):
 
 def save(head):
     save_file = open("KanjiKard_save.txt", "w")
+    if save_file == None
     temp = KanjiKard()
     temp = head
     while temp.kanji != None:
@@ -176,7 +178,14 @@ def save(head):
         temp = temp.next
 
 def load(head):
-    load_file = open("KanjiKard_save.txt", "r")
+    load_file = open("KanjiKard_save.txt", "r") 
+    load_file.seek(0)
+    first_char = load_file.read(1)
+    if not first_char:
+        no_save_file(head)
+        return
+    else:
+        load_file.seek(0)
     temp = KanjiKard()
     temp = head
     after = KanjiKard()
@@ -241,7 +250,7 @@ def load_user(head):
     while temp.kanji != None:
         # Here we check where the kard belongs
         # that is to_study, learned, not_learned
-        elif temp.learned == False:
+        if temp.learned == False:
             new_user.add_not_learned(temp)
         elif temp.learned = True:
             new_user.add_learned(temp)        
@@ -253,7 +262,9 @@ def load_user(head):
         if temp.next == None:
             return new_user
         temp = temp.next
-                    
+
+
+
 def update_user(head, cur_user):
     temp = KanjiKard()
     temp = head
@@ -286,6 +297,7 @@ def update_user(head, cur_user):
                 return cur_user
             temp = tmep.next
 
+# the below will be used every time an answer is submitted for a card
 def update_on_kard(temp, cur_user):
     if temp.num_right > 2*temp.num_wrong:
         cur_user.add_learned(temp)
@@ -333,26 +345,6 @@ def print_all_kanji(head): #prints only the kanji for each KanjiKard
         print(temp.kanji)
         temp = temp.next
         temp_kanji = temp.kanji
-"""
-def search_for_kanji(head): #searches list for target kanji and returns pointer to that KanjiKard
-    print("Enter the kanji you want to search for: ")
-    target = input()
-    temp = KanjiKard()
-    temp = head
-    temp_kanji = temp.kanji
-    while temp_kanji != None:
-        if temp.next == None:
-            print(target, "could not be found")
-            break
-        if temp_kanji == target:
-            print("Found", target)
-            print("\n")
-            print(temp.kanji,":", temp.reading, ":", temp.english )
-            return temp
-        temp = temp.next
-        temp_kanji = temp.kanji
-"""
-
 
 def findWholeWord(w):
     return re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search
@@ -382,37 +374,45 @@ def search(head): #searches list for target kanji and returns pointer to that Ka
         temp = temp.next
         temp_kanji = temp.kanji
 
-#testS = KanjiKard()
-#testS = search_for_kanji(head, target = "七")
-#if testS != None:
-#    print(testS.kanji, ":Search test")
-running = 1
-def end(Q):
+def clear():
+    os.remove("KanjiKard_save.txt")
+    no_save_file(head)
+
+
+def end():
     global running
+    global head
     running = 0
+    save(head)
+
 actions = {
     '1': print_all_kanji,
     '2': print_all,
     '3': search,
+    '4': update_user,
+    '5': clear,
     'q': end
 }
+running = 1
+load(head)
+cur_user = load_user
 while(running):
     print("Welcome\n")
     print("Available actions:\n")
     print("1.) display all kanji\n")
     print("2.) display all kanji : readings : meaning\n")
     print("3.) search for kanji\n")
+    print("4.) refresh user data\n")
+    print("5.) clear user data\n")
     print("q.) quit\n")
     print("Enter the number of the action you wish to execute: ")
-
     action = input()
-    
-    actions[action](head)
-#print_all_kanji(head)
-
-
-
-
+    if action == 4:
+        update_user(head, cur_user)
+    if action == 5:
+        cur_user = user()
+    else:
+        actions[action](head)
 
 """
 Turn

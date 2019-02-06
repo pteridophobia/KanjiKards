@@ -48,7 +48,7 @@ class User:
         self.current_learned = []
         self.not_learned = []
         self.to_study = []
-        self.user_sets = [[]] * 10
+        self.user_sets = [[]]
     def add_learned(self, kard):
         self.current_learned.append(kard)
     def remove_learned(self, kard):
@@ -64,9 +64,11 @@ class User:
     def add_user_set(self, head):
         adding = 1
         i = 0
-        
+        #bool deleted = False
         for item in self.user_sets:
-            if item == None:
+            
+            if item == []:
+                print("item:", item)
                 break 
             if i == 9:
                 print("You have the maximum number of sets. Would you like to delete one and mae a new set(y/n)?:")
@@ -81,27 +83,37 @@ class User:
                     i = delete_num - 1
                     break
             i += 1 
-        print(i, "\n")
-        self.user_sets[i][0] = "new set" + str(i)
+
+        #print("TEST set:", self.user_sets)
+        self.user_sets[i].append("new set" + str(i))
+        #print("TEST set:[0]", self.user_sets[0])
+        print("TEST set:", self.user_sets)
+        #self.user_sets[i][0] = "new set" + str(i)
         print("Name your new set (press enter for default name):\n")
         new_set_name = input()
-        if new_set_name == "\n":
+        if new_set_name == "":
             self.user_sets[i][0] = "new set" + str(i)
         else:
              self.user_sets[i][0] = new_set_name    
-        
+        print("TEST set:", self.user_sets)
         while adding == 1:
             print("Would you like to search for kards to add or browse all kards?\n")
             print("press 1.) to search, 2.) to browse, or q.) to quit:")
             choice = input()
-            if choice == 1:
-                temp = KanjiKard()
+            print("inpiut:", choice)
+            if choice == '1':
+                temp = []
                 temp = search(head)
-                print("would you like to add kard: ", temp, "(y/n)?\n" )
-                user_y_n = input()
-                if user_y_n == 'y':
-                    self.user_sets[i][1].append(temp)
-            elif choice == 2:
+                print("Which kard would you like to add(enter the number, 0 for none)?\n" )
+                for kard in temp:
+                    print(kard.kanji,":", kard.reading, ":", kard.romanji, ":", kard.english )
+                kard_num = input()
+                if kard_num == '0':
+                    continue
+                else:
+                    self.user_sets[i].append(temp[int(kard_num) - 1])
+                    
+            elif choice == '2':
                 curr = KanjiKard()
                 curr = head
 
@@ -110,13 +122,13 @@ class User:
                     print("would you like to add kard: ", curr, "(y/n)?\n" )
                     user_y_n = input()
                     if user_y_n == 'y':
-                        self.user_sets[i][1].append(curr)
+                        self.user_sets[i].append(curr)
                     elif user_y_n == 'q':
                         break
                     curr = curr.next
             elif choice == 'q':
-                adding = 1
-
+                adding = 2
+            print("TEST set:", self.user_sets)
 """
  = KanjiKard()
 .kanji = ""
@@ -399,6 +411,7 @@ def findWholeWord(w):
 
 
 def search(head): #searches list for target kanji and returns pointer to that KanjiKard
+    return_list = []
     print("Enter the romanji spelling, English word, hiraganna/katakanna, or kanji character for the kanji you want to search for: ")
     target = input()
     temp = KanjiKard()
@@ -417,10 +430,12 @@ def search(head): #searches list for target kanji and returns pointer to that Ka
             print(temp.kanji,":", temp.reading, ":", temp.romanji, ":", temp.english )
             print('\n')
             num_found += 1
+            return_list.append(temp)
             #return temp
 
         temp = temp.next
         temp_kanji = temp.kanji
+    return return_list
 
 def clear():
     os.remove("KanjiKard_save.txt")

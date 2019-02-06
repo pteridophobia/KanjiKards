@@ -48,6 +48,7 @@ class User:
         self.current_learned = []
         self.not_learned = []
         self.to_study = []
+        self.user_sets = [[]] * 10
     def add_learned(self, kard):
         self.current_learned.append(kard)
     def remove_learned(self, kard):
@@ -60,6 +61,61 @@ class User:
         self.to_study.append(kard)
     def remove_to_study(self, kard):
         self.to_study.remove(kard)
+    def add_user_set(self, head):
+        adding = 1
+        i = 0
+        
+        for item in self.user_sets:
+            if item == None:
+                break 
+            if i == 9:
+                print("You have the maximum number of sets. Would you like to delete one and mae a new set(y/n)?:")
+                delete_set = input()
+                if delete_set == 'y':
+                    j = 0
+                    print("Enter the number that appears next to the set you wish to delete:\n")
+                    while j <= 9:
+                        print(j+1," " ,self.user_sets[j][0], "\n")
+                        j += 1
+                    delete_num = input()
+                    i = delete_num - 1
+                    break
+            i += 1 
+        print(i, "\n")
+        self.user_sets[i][0] = "new set" + str(i)
+        print("Name your new set (press enter for default name):\n")
+        new_set_name = input()
+        if new_set_name == "\n":
+            self.user_sets[i][0] = "new set" + str(i)
+        else:
+             self.user_sets[i][0] = new_set_name    
+        
+        while adding == 1:
+            print("Would you like to search for kards to add or browse all kards?\n")
+            print("press 1.) to search, 2.) to browse, or q.) to quit:")
+            choice = input()
+            if choice == 1:
+                temp = KanjiKard()
+                temp = search(head)
+                print("would you like to add kard: ", temp, "(y/n)?\n" )
+                user_y_n = input()
+                if user_y_n == 'y':
+                    self.user_sets[i][1].append(temp)
+            elif choice == 2:
+                curr = KanjiKard()
+                curr = head
+
+                while curr.kanji != None:
+                    print("Enter q to quit browsing\n")
+                    print("would you like to add kard: ", curr, "(y/n)?\n" )
+                    user_y_n = input()
+                    if user_y_n == 'y':
+                        self.user_sets[i][1].append(curr)
+                    elif user_y_n == 'q':
+                        break
+                    curr = curr.next
+            elif choice == 'q':
+                adding = 1
 
 """
  = KanjiKard()
@@ -88,10 +144,6 @@ head.grade_level = 2
 head.reading = 'あたま'
 head.romanji = 'atama'
 head.next = KanjiKard()
-
-
-
-print(i)
 
 def no_save_file(head):
     temp = KanjiKard()
@@ -144,7 +196,6 @@ def no_save_file(head):
 
 def save(head):
     save_file = open("KanjiKard_save.txt", "w")
-    if save_file == None
     temp = KanjiKard()
     temp = head
     while temp.kanji != None:
@@ -178,14 +229,11 @@ def save(head):
         temp = temp.next
 
 def load(head):
-    load_file = open("KanjiKard_save.txt", "r") 
-    load_file.seek(0)
-    first_char = load_file.read(1)
-    if not first_char:
+    if not os.path.isfile("KanjiKard_save.txt"):
         no_save_file(head)
         return
-    else:
-        load_file.seek(0)
+
+    load_file = open("KanjiKard_save.txt", "r") 
     temp = KanjiKard()
     temp = head
     after = KanjiKard()
@@ -246,13 +294,13 @@ def load(head):
 def load_user(head):
     temp = KanjiKard()
     temp = head
-    new_user = user()
+    new_user = User()
     while temp.kanji != None:
         # Here we check where the kard belongs
         # that is to_study, learned, not_learned
         if temp.learned == False:
             new_user.add_not_learned(temp)
-        elif temp.learned = True:
+        elif temp.learned == True:
             new_user.add_learned(temp)        
         if temp.num_right > 2*temp.num_wrong:
             new_user.add_learned(temp)
@@ -268,34 +316,34 @@ def load_user(head):
 def update_user(head, cur_user):
     temp = KanjiKard()
     temp = head
-        while temp.kanji != None:
-            if temp.num_right > 2*temp.num_wrong:
+    while temp.kanji != None:
+        if temp.num_right > 2*temp.num_wrong:
+            cur_user.add_learned(temp)
+            temp.learned = True
+            if temp in cur_user.not_learned:
+                cur_user.remove_not_learned(tmep)
+        elif temp.num_wrong > 0:
+            cur_user.add_to_study(temp)
+        else:
+            cur_user.add_not_learned(temp)
+            temp.learned = False
+            if temp in cur_user.current_learned:
+                cur_user.remove_learned(temp)
+        if temp.daily_easy > 2:
+            temp.add_learned(temp)
+            temp.learned = True
+            if temp in cur_user.not_learned:
+                cur_user.remove_not_learned(tmep)
+        if temp.daily_wrong > 1:
+            temp.add_to_study(temp)
+        if temp.daily_correct > 2*tmep.daily_wrong:
+            if temp.daily_correct - tmep.daily_wrong > 10:
                 cur_user.add_learned(temp)
-                temp.learned = True
                 if temp in cur_user.not_learned:
                     cur_user.remove_not_learned(tmep)
-            elif temp.num_wrong > 0:
-                cur_user.add_to_study(temp)
-            else:
-                cur_user.add_not_learned(temp)
-                temp.learned = False
-                if temp in cur_user.current_learned:
-                    cur_user.remove_learned(temp)
-            if temp.daily_easy > 2:
-                temp.add_learned(temp)
-                temp.learned = True
-                if temp in cur_user.not_learned:
-                    cur_user.remove_not_learned(tmep)
-            if temp.daily_wrong > 1:
-                temp.add_to_study(temp)
-            if temp.daily_correct > 2*tmep.daily_wrong:
-                if temp.daily_correct - tmep.daily_wrong > 10:
-                    cur_user.add_learned(temp)
-                    if temp in cur_user.not_learned:
-                        cur_user.remove_not_learned(tmep)
-            if temp.next == None:
-                return cur_user
-            temp = tmep.next
+        if temp.next == None:
+            return cur_user
+        temp = tmep.next
 
 # the below will be used every time an answer is submitted for a card
 def update_on_kard(temp, cur_user):
@@ -395,7 +443,10 @@ actions = {
 }
 running = 1
 load(head)
-cur_user = load_user
+cur_user = User()
+
+cur_user = load_user(head)
+
 while(running):
     print("Welcome\n")
     print("Available actions:\n")
@@ -404,13 +455,16 @@ while(running):
     print("3.) search for kanji\n")
     print("4.) refresh user data\n")
     print("5.) clear user data\n")
+    print("6.) create a new kard set\n")
     print("q.) quit\n")
     print("Enter the number of the action you wish to execute: ")
     action = input()
     if action == 4:
         update_user(head, cur_user)
     if action == 5:
-        cur_user = user()
+        cur_user = User()
+    if action == '6':
+        cur_user.add_user_set(head)
     else:
         actions[action](head)
 

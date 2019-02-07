@@ -84,7 +84,9 @@ class User:
                     break
             i += 1 
 
-        #print("TEST set:", self.user_sets)
+        print("TEST set:", self.user_sets)
+        print("TEST set:[i]", self.user_sets[i])
+        self.user_sets.append([])
         self.user_sets[i].append("new set" + str(i))
         #print("TEST set:[0]", self.user_sets[0])
         print("TEST set:", self.user_sets)
@@ -119,7 +121,8 @@ class User:
 
                 while curr.kanji != None:
                     print("Enter q to quit browsing\n")
-                    print("would you like to add kard: ", curr, "(y/n)?\n" )
+                    print("would you like to add the following kard (y/n)?\n" )
+                    print(curr.kanji,":", curr.reading, ":", curr.romanji, ":", curr.english )
                     user_y_n = input()
                     if user_y_n == 'y':
                         self.user_sets[i].append(curr)
